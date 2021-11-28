@@ -65,7 +65,15 @@ app.post('/emergency', requireLogin, (req, res) => {
     } = req.body;
     console.log(bloodGroup);
     console.log(reason);
+    // add sending email feature
     res.send('Email is Sent to Admin and Other Doners with required Blood Group');
+})
+app.post('/requestblood', requireLogin, (req, res)=>{
+    const {bloodGroup, reason} = req.body;
+    console.log(bloodGroup);
+    console.log(reason);
+    // add these things to other collection to show admin
+    res.send("Request Sent Admin will Contact Soon on You Email");
 })
 
 app.get('/register', (req, res) => {
@@ -110,7 +118,7 @@ app.get('/blood', (req, res)=>{
     res.render('blood');
 })
 app.post('/register', async (req, res) => {
-    const {
+    let {
         password,
         username,
         name,
@@ -121,6 +129,9 @@ app.post('/register', async (req, res) => {
     } = req.body;
     const isAdmin = false;
     const donations = 0;
+    if(isDoner==undefined){
+        isDoner = false;
+    }
     const user = new User({
         username,
         password,
@@ -134,7 +145,7 @@ app.post('/register', async (req, res) => {
     })
     await user.save();
     req.session.user_id = user._id;
-    res.redirect('secret');
+    res.redirect('/');
 })
 app.get('/secret', requireLogin, (req, res) => {
     res.render('secret');

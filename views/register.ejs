@@ -1,23 +1,80 @@
 <%- include("partials/header.ejs") -%>
+<style>
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
 
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input {
+  margin: 3px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-floating{
+    padding: 4px;
+}
+/* .form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+} */
+</style>
     <title>Register</title>
 </head>
-<body>
-    <%- include("partials/navbar.ejs") -%>
-    <h1>Register</h1>
-    <form action="/register" method="post">
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email">
-        <label for="bloodGroup">Blood Group</label>
-        <input type="text" name="bloodGroup" id="bloodGroup">
-        <label for="isDoner">is Doner true/false</label>
-        <input type="text" name="isDoner" id="isDoner">
-        <button>Register</button>
-    </form>
+    
+    <body class="text-center">
+        <%- include("partials/navbar.ejs") -%>
+
+        <main class="form-signin">
+            <form action="/register" method="post">
+            <img class="mb-4" src="logo.jpg" alt="" width="100" height="100">
+            <h1 class="h3 mb-3 fw-normal">Register</h1>
+        
+            <div class="form-floating">
+              <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username">
+              <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+              </div>
+             <div class="form-floating">
+              <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Your Name">
+              <label for="floatingInput">Name</label>
+            </div>
+             <div class="form-floating">
+              <input type="email" class="form-control" id="floatingInput" placeholder="Your Email">
+              <label for="floatingInput">Email address</label>
+            </div>
+
+            <div class="form-group">
+                <label for="ControlSelect1">Blood Group</label>
+                <select class="form-control" id="ControlSelect1" name="bloodGroup">
+                  <option>A+</option>
+                  <option>B+</option>
+                  <option>AB+</option>
+                  <option>O+</option>
+                  <option>A-</option>
+                  <option>B-</option>
+                  <option>AB-</option>
+                  <option>O-</option>
+                  <option>Others</option>
+                </select>
+              </div>
+              
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="isDoner" value=true>
+                <label class="form-check-label" for="flexSwitchCheckDefault">Are You A doner?</label>
+              </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+          </form>
+        </main>
+        
+        
 <%- include("partials/footer.ejs") -%>

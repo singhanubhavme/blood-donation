@@ -1,12 +1,47 @@
 <%- include("partials/header.ejs") -%>
+<style>
+    .form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="number"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
 </head>
-<body>
-<%- include("partials/navbar.ejs") -%>
-<h1>Doner Page</h1>
-<form action="/doner" method="post">
+
+<body class="text-center">
+    <%- include("partials/navbar.ejs") -%>    
+    <main class="form-signin">
+        <form action="/doner" method="post">
+        <img class="mb-4" src="logo.jpg" alt="" width="100" height="100">
+        <h1 class="h3 mb-3 fw-normal">Donate Blood</h1>
+    
+        <div class="form-floating">
+          <input type="number" class="form-control" id="floatingInput" name="numberofunits" placeholder="Number of Units">
+          <label for="floatingInput">Units</label>
+        </div>    
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Donate</button>
+      </form>
+    </main>
+    
+<!-- <form action="/doner" method="post">
     <label for="numberofunits">Enter Number of Units You Want to Donate</label>
     <input type="number" name="numberofunits" id="numberofunits">
     <button>Submit</button>
+</form> -->
 
-</form>
 <%- include("partials/footer.ejs") -%>
