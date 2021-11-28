@@ -1,0 +1,11 @@
+{
+  "name": "blood-donation-mini-project",
+  "version": "1.0.0",
+  "description": "Blood Donation Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anubhav Singh",
+  "license": "ISC"
+}
