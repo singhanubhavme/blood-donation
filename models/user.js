@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Password can't be blank"]
     },
+    name : {
+        type: String
+    },
     email: {
         type: String
     },
@@ -18,8 +21,8 @@ const userSchema = new mongoose.Schema({
     bloodGroup: {
         type: String
     },
-    unitOfBlood: {
-        type: String
+    donations: {
+        type: Number
     },
     isAdmin: {
         type: Boolean

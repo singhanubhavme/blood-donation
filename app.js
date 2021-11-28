@@ -9,6 +9,8 @@ app.set('views', 'views');
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(express.static("public"));
+
 app.use(session({
     secret: 'notasecret',
     resave: true,
@@ -56,6 +58,16 @@ app.post('/logout', (req, res) => {
     res.redirect('/login');
 })
 
+app.post('/emergency', requireLogin, (req, res) => {
+    const {
+        bloodGroup,
+        reason
+    } = req.body;
+    console.log(bloodGroup);
+    console.log(reason);
+    res.send('Email is Sent to Admin and Other Doners with required Blood Group');
+})
+
 app.get('/register', (req, res) => {
     res.render('register');
 })
@@ -84,28 +96,39 @@ app.get('/admin', requireLogin, (req, res) => {
     })
 })
 
-app.get('/patient', requireLogin, (req, res)=>{
-    res.render('patient');
+app.post('/doner', requireLogin, (req, res)=>{
+    const {numberofunits} = req.body;
+    const uid = req.session.user_id;
+    //update in db
+    res.send("You can go to nearest camp to donate the blood");
 })
 
+app.get('/patient', requireLogin, (req, res) => {
+    res.render('patient');
+})
+app.get('/blood', (req, res)=>{
+    res.render('blood');
+})
 app.post('/register', async (req, res) => {
     const {
         password,
         username,
+        name,
         email,
         phoneNum,
         bloodGroup,
-        unitOfBlood,
-        isAdmin,
         isDoner
     } = req.body;
+    const isAdmin = false;
+    const donations = 0;
     const user = new User({
         username,
         password,
+        name,
         email,
         phoneNum,
         bloodGroup,
-        unitOfBlood,
+        donations,
         isAdmin,
         isDoner
     })

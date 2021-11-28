@@ -3,21 +3,21 @@
     <title>Register</title>
 </head>
 <body>
+    <%- include("partials/navbar.ejs") -%>
     <h1>Register</h1>
     <form action="/register" method="post">
         <label for="username">Username</label>
         <input type="text" name="username" id="username">
         <label for="password">Password</label>
         <input type="password" name="password" id="password">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
         <label for="email">Email</label>
         <input type="email" name="email" id="email">
         <label for="bloodGroup">Blood Group</label>
         <input type="text" name="bloodGroup" id="bloodGroup">
-        <label for="unitOfBlood">Unit of Blood</label>
-        <input type="text" name="unitOfBlood" id="unitOfBlood">
         <label for="isDoner">is Doner true/false</label>
         <input type="text" name="isDoner" id="isDoner">
-        <input type="hidden" name="isAdmin" value=false>
         <button>Register</button>
     </form>
 <%- include("partials/footer.ejs") -%>

@@ -1,1 +1,12 @@
+<%- include("partials/header.ejs") -%>
+</head>
+<body>
+<%- include("partials/navbar.ejs") -%>
 <h1>Doner Page</h1>
+<form action="/doner" method="post">
+    <label for="numberofunits">Enter Number of Units You Want to Donate</label>
+    <input type="number" name="numberofunits" id="numberofunits">
+    <button>Submit</button>
+
+</form>
+<%- include("partials/footer.ejs") -%>
