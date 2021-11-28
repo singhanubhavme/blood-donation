@@ -29,9 +29,8 @@ const requireLogin = (req, res, next) => {
     }
     next();
 }
-
 app.get('/', (req, res) => {
-    res.render('home'); 
+    res.render('home');
 })
 
 app.get('/login', (req, res) => {
@@ -46,7 +45,8 @@ app.post('/login', async (req, res) => {
     const foundUser = await User.findAndValidate(username, password)
     if (foundUser) {
         req.session.user_id = foundUser._id;
-        res.redirect('/secret');
+        // res.redirect('/secret');
+        res.redirect('/');
     } else {
         res.redirect('/login');
     }
@@ -58,6 +58,34 @@ app.post('/logout', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('register');
+})
+
+app.get('/doner', requireLogin, (req, res) => {
+    const uid = req.session.user_id;
+    User.findById(uid, function (err, foundID) {
+        const isDoner = foundID.isDoner;
+        if (isDoner) {
+            return res.render('doner');
+        } else {
+            return res.send("You have to be a doner to access this page");
+        }
+    })
+})
+
+app.get('/admin', requireLogin, (req, res) => {
+    const uid = req.session.user_id;
+    User.findById(uid, function (err, foundID) {
+        const isAdmin = foundID.isAdmin;
+        if (isAdmin) {
+            return res.render('admin');
+        } else {
+            return res.send("You have to be a admin to access this page");
+        }
+    })
+})
+
+app.get('/patient', requireLogin, (req, res)=>{
+    res.render('patient');
 })
 
 app.post('/register', async (req, res) => {
