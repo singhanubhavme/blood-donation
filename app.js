@@ -171,10 +171,6 @@ app.get('/blood', (req, res) => {
     res.render('blood');
 })
 
-// app.get('/compatible', (req, res)=>{
-//     res.render('compatible');
-// })
-
 app.post('/blood', (req, res) => {
     let {
         bloodGroup1,
@@ -205,6 +201,8 @@ app.post('/register', async (req, res) => {
     if (isDonor == undefined) {
         isDonor = false;
     }
+    //check if same username then save to db also add ways to check if data sent to db is valid such as email make password
+    // atleast  6 with number and alphabet
     const user = new User({
         username,
         password,
