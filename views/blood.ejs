@@ -1,3 +1,12 @@
 <%- include("partials/header.ejs") -%>
+</head>
+<body>
 <%- include("partials/navbar.ejs") -%>
+<form action="/blood" method="post">
+    <label for="group1">First Blood Group</label>
+    <input type="text" name="group1" id="group1">
+    <label for="group2">Second Blood Group</label>
+    <input type="text" name="group2" id="group2">
+    <button>Check</button>
+</form>
 <%- include("partials/footer.ejs") -%>

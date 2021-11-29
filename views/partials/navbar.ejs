@@ -24,6 +24,9 @@
             <a href="/blood" class="nav-link active">All About Blood</a>
           </li>
         </ul>
+        <% if(url === '/patient') {%>
+            <a href = "/emergency" class="btn btn-danger btn-outline-light me-2 login-popover">Emergency</a>
+        <%}%>
         <% if(!currentUser){ %>
         <div class="text-end">
           <a href = '/login' class="btn btn-outline-light me-2">Login</a>
@@ -37,3 +40,13 @@
       </div>
     </div>
   </nav>
+  <script>
+    $(document).ready(function(){
+      $('.login-popover').popover({
+    placement: 'bottom',
+    title: 'Having an Emergency?',
+    content: 'This will send Email to selected Doners and Admin',
+    trigger: 'hover'
+  });
+    });
+    </script>

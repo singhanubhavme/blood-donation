@@ -30,6 +30,7 @@ app.use(session({
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.user_id;
+    res.locals.url = req.url;
     next();
 });
 
@@ -40,7 +41,7 @@ const requireLogin = (req, res, next) => {
     }
     next();
 }
-app.get('/', async(req, res) => {
+app.get('/', (req, res) => {
     res.render('home');
 })
 
@@ -55,7 +56,6 @@ app.post('/login', async (req, res) => {
     } = req.body;
     const foundUser = await User.findAndValidate(username, password)
     if (foundUser) {
-
         req.session.user_id = foundUser._id;
         res.redirect('/');
     } else {
@@ -66,7 +66,9 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
-
+app.get('/emergency', requireLogin, (req, res)=>{
+    res.render('emergency');
+})
 app.post('/emergency', requireLogin, (req, res) => {
     const {
         bloodGroup,
@@ -132,6 +134,24 @@ app.get('/patient', requireLogin, (req, res) => {
 app.get('/blood', (req, res) => {
     res.render('blood');
 })
+
+// app.get('/compatible', (req, res)=>{
+//     res.render('compatible');
+// })
+
+app.post('/blood', (req, res)=>{
+let {
+    group1, group2
+} = req.body;
+if(group1 === group2)
+{
+    res.render('compatible', {group1: group1, group2: group2});
+}
+else{
+    res.send("Not Compatible");
+}
+})
+
 app.post('/register', async (req, res) => {
     let {
         password,
@@ -162,9 +182,9 @@ app.post('/register', async (req, res) => {
     req.session.user_id = user._id;
     res.redirect('/');
 })
-app.get('/secret', requireLogin, (req, res) => {
-    res.render('secret');
-})
+app.get('*', function(req, res){
+    res.send('error 404');
+  });
 app.listen(3000, () => {
     console.log("Serving at 3000");
 })
