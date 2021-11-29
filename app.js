@@ -5,6 +5,42 @@ const User = require('./models/user');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 
+function bloodCompatibilityChecker(Donor, Recipient) {
+    if (Recipient == "A+") {
+        if (Donor == "A+" || Donor == "A-" || Donor == "O+" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "A-") {
+        if (Donor == "A-" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "B+") {
+        if (Donor == "B+" || Donor == "B-" || Donor == "O-" || Donor == "O+") {
+            return true;
+        }
+    } else if (Recipient == "B-") {
+        if (Donor == "B-" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "AB+") {
+        if (Donor == "A+" || Donor == "A-" || Donor == "B+" || Donor == "B-" || Donor == "AB+" || Donor == "AB-" || Donor == "O+" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "AB-") {
+        if (Donor == "AB-" || Donor == "A-" || Donor == "B-" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "O+") {
+        if (Donor == "O+" || Donor == "O-") {
+            return true;
+        }
+    } else if (Recipient == "O-") {
+        if (Donor == "O-") {
+            return true;
+        }
+    }
+    return false;
+}
 
 mongoose.connect('mongodb://localhost:27017/blood-donation-db')
     .then(() => {
@@ -77,7 +113,7 @@ app.post('/emergency', requireLogin, (req, res) => {
     console.log(bloodGroup);
     console.log(reason);
     // add sending email feature
-    res.send('Email is Sent to Admin and Other Doners with required Blood Group');
+    res.send('Email is Sent to Admin and Other Donors with required Blood Group');
 })
 app.post('/requestblood', requireLogin, (req, res) => {
     const {
@@ -95,14 +131,14 @@ app.get('/register', (req, res) => {
     res.render('register');
 })
 
-app.get('/doner', requireLogin, (req, res) => {
+app.get('/donor', requireLogin, (req, res) => {
     const uid = req.session.user_id;
     User.findById(uid, function (err, foundID) {
-        const isDoner = foundID.isDoner;
-        if (isDoner) {
-            return res.render('doner');
+        const isDonor = foundID.isDonor;
+        if (isDonor) {
+            return res.render('donor');
         } else {
-            return res.send("You have to be a doner to access this page");
+            return res.send("You have to be a donor to access this page");
         }
     })
 })
@@ -119,7 +155,7 @@ app.get('/admin', requireLogin, (req, res) => {
     })
 })
 
-app.post('/doner', requireLogin, (req, res) => {
+app.post('/donor', requireLogin, (req, res) => {
     const {
         numberofunits
     } = req.body;
@@ -144,7 +180,7 @@ app.post('/blood', (req, res) => {
         bloodGroup1,
         bloodGroup2
     } = req.body;
-    if (bloodGroup1 === bloodGroup2) {
+    if (bloodCompatibilityChecker(bloodGroup1, bloodGroup2)) {
         res.render('compatible', {
             bloodGroup1: bloodGroup1,
             bloodGroup2: bloodGroup2
@@ -162,12 +198,12 @@ app.post('/register', async (req, res) => {
         email,
         phoneNum,
         bloodGroup,
-        isDoner
+        isDonor
     } = req.body;
     const isAdmin = false;
     const donations = 0;
-    if (isDoner == undefined) {
-        isDoner = false;
+    if (isDonor == undefined) {
+        isDonor = false;
     }
     const user = new User({
         username,
@@ -178,7 +214,7 @@ app.post('/register', async (req, res) => {
         bloodGroup,
         donations,
         isAdmin,
-        isDoner
+        isDonor
     })
     await user.save();
     req.session.user_id = user._id;

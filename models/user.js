@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean
     },
-    isDoner: {
+    isDonor: {
         type: Boolean
     }
 })
