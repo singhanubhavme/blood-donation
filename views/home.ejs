@@ -1,7 +1,31 @@
 <%- include("partials/header.ejs") -%>
 </head>
-<body>
-<%- include("partials/navbar.ejs") -%>
-<br>
+<style>
+
+body-div {
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+.cover-container {
+  max-width: 42em;
+}
+</style>
+<body class="min-vh-100 text-center text-white bg-dark">
+    <%- include("partials/navbar.ejs") -%>
+    <div class="cover-container d-flex w-50 h-100 p-3 mx-auto flex-column mt-5 body-div">
+<main class="px-3">
+    <h1>Blood Donation Camp</h1>
+    <p class="lead">In this Website you can donate blood or get blood. You need to have a account to donate or receive blood, also find different compatibility of blood in All About Blood Page</p>
+    <p class="lead">
+        <% if(!currentUser) {%> 
+      <a href = '/login' class="btn btn-lg fw-bold btn-outline-light">Login</a>
+        <%} else {%>
+        <a href="/patient" class="btn btn-lg btn-danger btn-outline-light m-2">Patient</a>
+        <a href="/doner" class="btn btn-lg btn-secondary text-dark border-white bg-white m-2">Doner</a>
+        <%}%>
+    </p>
+  </main>
+
 
 <%- include("partials/footer.ejs") -%>

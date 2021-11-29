@@ -20,7 +20,6 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.static("public"));
-// const sessionOptions = ;
 app.use(session({
     // cookie: { maxAge: 60000 },
     secret: 'notasecret',
