@@ -10,6 +10,9 @@ body-div {
 .cover-container {
   max-width: 42em;
 }
+.cover-container{
+  min-height: 70vh!important;
+}
 </style>
 <body class="min-vh-100 text-center text-white bg-dark">
     <%- include("partials/navbar.ejs") -%>
@@ -26,6 +29,7 @@ body-div {
         <%}%>
     </p>
   </main>
+  </div>
 
 
 <%- include("partials/footer.ejs") -%>

@@ -2,11 +2,59 @@
 </head>
 <body>
 <%- include("partials/navbar.ejs") -%>
-<form action="/blood" method="post">
-    <label for="group1">First Blood Group</label>
-    <input type="text" name="group1" id="group1">
-    <label for="group2">Second Blood Group</label>
-    <input type="text" name="group2" id="group2">
-    <button>Check</button>
-</form>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+      <div class="col-lg-7 text-center text-lg-start">
+        <h1 class="display-4 fw-bold lh-1 mb-3">Blood Type Compatibility</h1>
+        <p class="col-lg-10 fs-4">Not Every Blood is Compatible to one Another, only specific blood types are compatible to be given to the patient, check the Compatibility here.</p>
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light" action="/blood" method="post">
+            <div class="fw-light mb-3 md lead">Compatibility Checker</div>
+
+          <div class="form-group mb-3">
+            <label for="ControlSelect1">Doner Blood Group</label>
+            <select class="form-control" id="ControlSelect1" name="bloodGroup1">
+              <option>A+</option>
+              <option>B+</option>
+              <option>AB+</option>
+              <option>O+</option>
+              <option>A-</option>
+              <option>B-</option>
+              <option>AB-</option>
+              <option>O-</option>
+              <option>Others</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="ControlSelect1">Receiver Blood Group</label>
+            <select class="form-control" id="ControlSelect1" name="bloodGroup2">
+              <option>A+</option>
+              <option>B+</option>
+              <option>AB+</option>
+              <option>O+</option>
+              <option>A-</option>
+              <option>B-</option>
+              <option>AB-</option>
+              <option>O-</option>
+              <option>Others</option>
+            </select>
+          </div>
+
+          <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">Check</button>
+          <hr class="my-4">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid w-75">
+<ul>
+    <li><b>Group A</b> – has only the A antigen on red cells (and B antibody in the plasma). Group A can donate red blood cells to A’s and AB’s</li>
+    <li><b>Group B</b> – has only the B antigen on red cells (and A antibody in the plasma). Group B can donate red blood cells to B’s and AB’s.</li>
+    <li><b>Group AB</b> – has both A and B antigens on red cells (but neither A nor B antibody in the plasma). Group AB can donate red blood cells to other AB’s, but can receive from all others. Group AB is the universal plasma donor.</li>
+    <li><b>Group O</b> – has neither A nor B antigens on red cells (but both A and B antibody are in the plasma). Group O can donate red blood cells to anybody. It is the universal red cell donor.</li>
+</ul>
+</div>
 <%- include("partials/footer.ejs") -%>

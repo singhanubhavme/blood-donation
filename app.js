@@ -66,7 +66,7 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
-app.get('/emergency', requireLogin, (req, res)=>{
+app.get('/emergency', requireLogin, (req, res) => {
     res.render('emergency');
 })
 app.post('/emergency', requireLogin, (req, res) => {
@@ -139,17 +139,19 @@ app.get('/blood', (req, res) => {
 //     res.render('compatible');
 // })
 
-app.post('/blood', (req, res)=>{
-let {
-    group1, group2
-} = req.body;
-if(group1 === group2)
-{
-    res.render('compatible', {group1: group1, group2: group2});
-}
-else{
-    res.send("Not Compatible");
-}
+app.post('/blood', (req, res) => {
+    let {
+        bloodGroup1,
+        bloodGroup2
+    } = req.body;
+    if (bloodGroup1 === bloodGroup2) {
+        res.render('compatible', {
+            bloodGroup1: bloodGroup1,
+            bloodGroup2: bloodGroup2
+        });
+    } else {
+        res.send("Not Compatible");
+    }
 })
 
 app.post('/register', async (req, res) => {
@@ -182,9 +184,9 @@ app.post('/register', async (req, res) => {
     req.session.user_id = user._id;
     res.redirect('/');
 })
-app.get('*', function(req, res){
-    res.send('error 404');
-  });
+app.get('*', function (req, res) {
+    res.render("error404");
+});
 app.listen(3000, () => {
     console.log("Serving at 3000");
 })
