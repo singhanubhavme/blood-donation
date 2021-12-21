@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const User = require('./models/user');
+const Request = require('./models/requested');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 
@@ -57,7 +58,6 @@ app.use(express.urlencoded({
 }));
 app.use(express.static("public"));
 app.use(session({
-    // cookie: { maxAge: 60000 },
     secret: 'notasecret',
     saveUninitialized: true,
     resave: true
@@ -110,21 +110,46 @@ app.post('/emergency', requireLogin, (req, res) => {
         bloodGroup,
         reason
     } = req.body;
-    console.log(bloodGroup);
-    console.log(reason);
-    // add sending email feature
+    let emergency = true;
+    const uid = req.session.user_id;
+    User.findById(uid, (err, foundID) => {
+        let username = foundID.username;
+        const saveReq = async () => {
+            const request = new Request({
+                username,
+                bloodGroup,
+                reason,
+                emergency
+            })
+            const result = await request.save();
+        }
+        saveReq();
+    })
+    //send email
     res.send('Email is Sent to Admin and Other Donors with required Blood Group');
 })
-app.post('/requestblood', requireLogin, (req, res) => {
+
+app.post('/requestblood', requireLogin, async (req, res) => {
     const {
         bloodGroup,
         reason
     } = req.body;
-
-    console.log(bloodGroup);
-    console.log(reason);
-    // add these things to other collection to show admin
-    // res.send("Request Sent Admin will Contact Soon on You Email");
+    let emergency = false;
+    const uid = req.session.user_id;
+    User.findById(uid, (err, foundID) => {
+        let username = foundID.username;
+        const saveReq = async () => {
+            const request = new Request({
+                username,
+                bloodGroup,
+                reason,
+                emergency
+            })
+            const result = await request.save();
+        }
+        saveReq();
+    })
+    res.send("Request Sent Admin will Contact Soon on You Email");
 })
 
 app.get('/register', (req, res) => {
@@ -156,11 +181,29 @@ app.get('/admin', requireLogin, (req, res) => {
 })
 
 app.post('/donor', requireLogin, (req, res) => {
-    const {
-        numberofunits
-    } = req.body;
+    let numberofunits = parseInt(req.body.numberofunits);
+    if (numberofunits <= 0) {
+        return res.send("Invalid Input");
+    }
     const uid = req.session.user_id;
-    //update in db
+    let previousDonations = 0;
+    User.findById(uid, (err, docs) => {
+        if (err) {
+            console.log(err);
+        }
+        previousDonations = parseInt(docs.donations);
+        numberofunits = numberofunits + parseInt(previousDonations);
+        User.findByIdAndUpdate(
+            uid, {
+                $set: {
+                    donations: numberofunits
+                }
+            }, (err, docs) => {
+                if (err) {
+                    console.log(err);
+                }
+            })
+    })
     res.send("You can go to nearest camp to donate the blood");
 })
 
@@ -201,22 +244,29 @@ app.post('/register', async (req, res) => {
     if (isDonor == undefined) {
         isDonor = false;
     }
-    //check if same username then save to db also add ways to check if data sent to db is valid such as email make password
-    // atleast  6 with number and alphabet
-    const user = new User({
-        username,
-        password,
-        name,
-        email,
-        phoneNum,
-        bloodGroup,
-        donations,
-        isAdmin,
-        isDonor
+    User.find({
+        username: username
+    }, async (err, docs) => {
+        if (docs.length) {
+            res.send("User Already Registered");
+        } else {
+            const user = new User({
+                username,
+                password,
+                name,
+                email,
+                phoneNum,
+                bloodGroup,
+                donations,
+                isAdmin,
+                isDonor
+            })
+            await user.save();
+            req.session.user_id = user._id;
+            res.redirect('/');
+        }
     })
-    await user.save();
-    req.session.user_id = user._id;
-    res.redirect('/');
+
 })
 app.get('*', function (req, res) {
     res.render("error404");
