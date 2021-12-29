@@ -111,7 +111,7 @@ app.post('/emergency', requireLogin, (req, res) => {
         bloodGroup,
         reason
     } = req.body;
-    let emergency = true;
+    const emergency = true;
     const uid = req.session.user_id;
     User.findById(uid, (err, foundID) => {
         let username = foundID.username;
@@ -135,7 +135,8 @@ app.post('/requestblood', requireLogin, async (req, res) => {
         bloodGroup,
         reason
     } = req.body;
-    let emergency = false;
+    const emergency = false;
+    const completed = false;
     const uid = req.session.user_id;
     User.findById(uid, (err, foundID) => {
         let username = foundID.username;
@@ -144,7 +145,8 @@ app.post('/requestblood', requireLogin, async (req, res) => {
                 username,
                 bloodGroup,
                 reason,
-                emergency
+                emergency,
+                completed
             })
             const result = await request.save();
         }
