@@ -5,6 +5,37 @@
 <%- include("partials/navbar.ejs") -%>
 <h1 class="pt-3">Admin Page</h1>
 
+<div class="container">
+    <div class="requests">
+        <% for (let i=0;i<docs.length;i++){ %>
 
+            <div class="card text-center">
+                <div class="card-header">
+                    Username : <b><%= docs[i].username %></b>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Blood Group : <%= docs[i].bloodGroup %></h5>
+                  <p class="card-text"><b>Reason</b> <br> <%= docs[i].reason %>.</p>
+                  <% if(docs[i].emergency === true){ %>
+                  <div class="text-danger">Emergency</div>
+                  <% }else{ %>
+                  <div class="text-success">Not a Emergency</div>
+                  <% } %>
+                  <br>
+                  <form class="d-inline-block" action="/admin/delete" method="post">
+                      <input type="hidden" name="username" id="username" value = "<%= docs[i].username %>">
+                      <input type="hidden" name="bloodGroup" id="bloodGroup" value ="<%= docs[i].bloodGroup %>">
+                      <button class="btn btn-danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </div>
+        <br>
+        <% } %>
+    </div>
+</div>
+
+<div class="add-admin">
+    
+</div>
 
 <%- include("partials/footer.ejs") -%>

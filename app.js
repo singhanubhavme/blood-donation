@@ -87,10 +87,12 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const {
-        username,
-        password
-    } = req.body;
+    // const {
+    //     username,
+    //     password
+    // } = req.body;
+    const username = "anubhav";
+    const password = "anubhav";
     const foundUser = await User.findAndValidate(username, password)
     if (foundUser) {
         req.session.user_id = foundUser._id;
@@ -173,15 +175,39 @@ app.get('/donor', requireLogin, (req, res) => {
 
 app.get('/admin', requireLogin, (req, res) => {
     const uid = req.session.user_id;
+
+
     User.findById(uid, function (err, foundID) {
         const isAdmin = foundID.isAdmin;
         if (isAdmin) {
-            return res.render('admin');
+            Request.find({}, (err, docs) => {
+                return res.render('admin', {
+                    docs
+                });
+            })
+
         } else {
             return res.send("You have to be a admin to access this page");
         }
     })
 })
+
+
+app.post('/admin/delete', (req, res) => {
+    const {
+        username,
+        bloodGroup
+    } = req.body;
+    Request.findOneAndDelete({
+        username,
+        bloodGroup
+    }, (err, docs) => {
+        if (err) console.log(err);
+        else
+            res.redirect('/admin');
+    });
+})
+
 
 app.post('/donor', requireLogin, (req, res) => {
     let numberofunits = parseInt(req.body.numberofunits);
