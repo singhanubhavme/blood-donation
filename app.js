@@ -51,6 +51,7 @@ mongoose.connect('mongodb://localhost:27017/blood-donation-db')
         console.log("Error");
         console.log(err);
     })
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(express.urlencoded({
@@ -184,27 +185,28 @@ app.post('/donor', requireLogin, (req, res) => {
     let numberofunits = parseInt(req.body.numberofunits);
     if (numberofunits <= 0) {
         return res.send("Invalid Input");
+    } else {
+        const uid = req.session.user_id;
+        let previousDonations = 0;
+        User.findById(uid, (err, docs) => {
+            if (err) {
+                console.log(err);
+            }
+            previousDonations = parseInt(docs.donations);
+            numberofunits = numberofunits + parseInt(previousDonations);
+            User.findByIdAndUpdate(
+                uid, {
+                    $set: {
+                        donations: numberofunits
+                    }
+                }, (err, docs) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+        })
+        res.send("You can go to nearest camp to donate the blood");
     }
-    const uid = req.session.user_id;
-    let previousDonations = 0;
-    User.findById(uid, (err, docs) => {
-        if (err) {
-            console.log(err);
-        }
-        previousDonations = parseInt(docs.donations);
-        numberofunits = numberofunits + parseInt(previousDonations);
-        User.findByIdAndUpdate(
-            uid, {
-                $set: {
-                    donations: numberofunits
-                }
-            }, (err, docs) => {
-                if (err) {
-                    console.log(err);
-                }
-            })
-    })
-    res.send("You can go to nearest camp to donate the blood");
 })
 
 app.get('/patient', requireLogin, (req, res) => {
