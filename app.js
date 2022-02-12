@@ -208,6 +208,14 @@ app.post('/admin/delete', (req, res) => {
     });
 })
 
+app.post('/admin/accept', (req, res) => {
+    const {
+        username,
+        bloodGroup
+    } = req.body;
+    //update this and send back data name, phone number of donator also add evenyone's phone number
+})
+
 
 app.post('/donor', requireLogin, (req, res) => {
     let numberofunits = parseInt(req.body.numberofunits);
