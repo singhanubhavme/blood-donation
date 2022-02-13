@@ -1,56 +1,107 @@
 <%- include("partials/header.ejs") -%>
+<style>
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .form-signin .form-floating:focus-within {
+        z-index: 2;
+    }
+
+    .form-btn-sub {
+        margin-top: 0.7em;
+    }
+
+    /* .form-floating > .form-floating{
+        margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+    } */
+</style>
 <title>Admin</title>
 </head>
-<body class="text-center">
-<%- include("partials/navbar.ejs") -%>
-<!-- <h1 class="pt-3">Admin Page</h1> -->
 
-<div class="container">
-    <div class="requests">
-        <h2 class="pt-3">Patient Requests</h2>
-        <% for (let i=0;i<docs.length;i++){ %>
+<body class="text-center">
+    <%- include("partials/navbar.ejs") -%>
+    <!-- <h1 class="pt-3">Admin Page</h1> -->
+
+    <div class="container">
+        <div class="requests">
+            <h2 class="pt-3">Patient Requests</h2>
+            <% for (let i=0;i<requestDocs.length;i++){ %>
             <div class="card text-center">
                 <div class="card-header">
-                    Username : <b><%= docs[i].username %></b>
+                    Username : <b><%= requestDocs[i].username %></b>
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Blood Group : <%= docs[i].bloodGroup %></h5>
-                  <p class="card-text"><b>Reason</b> <br> <%= docs[i].reason %>.</p>
-                  <% if(docs[i].emergency === true){ %>
-                  <div class="text-danger">Emergency</div>
-                  <% }else{ %>
-                  <div class="text-success">Not a Emergency</div>
-                  <% } %>
-                  <br>
-                  
+                    <h5 class="card-title">Blood Group : <%= requestDocs[i].bloodGroup %></h5>
+                    <p class="card-text"><b>Reason</b> <br> <%= requestDocs[i].reason %>.</p>
+                    <% if(requestDocs[i].emergency === true){ %>
+                    <div class="text-danger">Emergency</div>
+                    <% }else{ %>
+                    <div class="text-success">Not a Emergency</div>
+                    <% } %>
+                    <br>
 
-                  <form class="d-inline-block" action="/admin/accept" method="post">
-                    <input type="hidden" name="username" id="username" value = "<%= docs[i].username %>">
-                    <input type="hidden" name="bloodGroup" id="bloodGroup" value ="<%= docs[i].bloodGroup %>">
-                    <button class="btn btn-primary" type="submit">Accept</button>
-                </form>
+                    <form class="d-inline-block" action="/admin/accept" method="post">
+                        <input type="hidden" name="username" id="username" value="<%= requestDocs[i].username %>">
+                        <input type="hidden" name="bloodGroup" id="bloodGroup" value="<%= requestDocs[i].bloodGroup %>">
+                        <button class="btn btn-primary" type="submit">Accept</button>
+                    </form>
 
-                <form class="d-inline-block" action="/admin/delete" method="post">
-                    <input type="hidden" name="username" id="username" value = "<%= docs[i].username %>">
-                    <input type="hidden" name="bloodGroup" id="bloodGroup" value ="<%= docs[i].bloodGroup %>">
-                    <button class="btn btn-danger" type="submit">Delete</button>
-                </form>
+                    <form class="d-inline-block" action="/admin/delete" method="post">
+                        <input type="hidden" name="username" id="username" value="<%= requestDocs[i].username %>">
+                        <input type="hidden" name="bloodGroup" id="bloodGroup" value="<%= requestDocs[i].bloodGroup %>">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
 
                 </div>
-              </div>
-        <br>
-        <% } %>
+            </div>
+            <br>
+            <% } %>
+        </div>
     </div>
-</div>
 
-<div class="donations">
-    <h2>Currently Available Blood</h2>
-</div>
+    <div class="container">
+        <div class="donations">
+            <h2 class="pt-3">Currently Available Blood</h2>
+            <% for (let j=0;j<userDocs.length;j++){ %>
+            <div class="card text-center">
+                <div class="card-header">
+                    Username : <b><%= userDocs[j].username %></b>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Blood Group : <%= userDocs[j].bloodGroup %></h5>
+                    <p class="card-text"><b>Number of Units : </b> <%= userDocs[j].donations %></p>
+                    <p class="card-text"><b>Name : </b> <%= userDocs[j].name %> </p>
+                    <p class="card-text"><b>Email : </b> <%= userDocs[j].email %> </p>
+                    <p class="card-text"><b>Phone Number : </b> <%= userDocs[j].phoneNum %> </p>
+                </div>
+            </div>
+            <br>
+            <% } %>
+        </div>
+    </div>
 
 
+    <div class="add-admin">
+        <h2>Add Admins From Here</h2>
 
-<div class="add-admin">
-    <h2>Add Admins From Here</h2>
-</div>
+        <div class="form-signin">
+            <form action="/make-admin" method="post">
+                <h1 class="h5 mb-3 fw-normal">Please Enter Username</h1>
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="username" id="floatingInput" placeholder="Username">
+                    <label for="floatingInput">Username</label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary form-btn-sub" type="submit">Submit</button>
+            </form>
+        </div>
 
-<%- include("partials/footer.ejs") -%>
+    </div>
+
+
+    <%- include("partials/footer.ejs") -%>

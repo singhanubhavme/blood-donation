@@ -5,65 +5,27 @@ const User = require('./models/user');
 const Request = require('./models/requested');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
-
-function bloodCompatibilityChecker(Donor, Recipient) {
-    if (Recipient == "A+") {
-        if (Donor == "A+" || Donor == "A-" || Donor == "O+" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "A-") {
-        if (Donor == "A-" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "B+") {
-        if (Donor == "B+" || Donor == "B-" || Donor == "O-" || Donor == "O+") {
-            return true;
-        }
-    } else if (Recipient == "B-") {
-        if (Donor == "B-" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "AB+") {
-        if (Donor == "A+" || Donor == "A-" || Donor == "B+" || Donor == "B-" || Donor == "AB+" || Donor == "AB-" || Donor == "O+" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "AB-") {
-        if (Donor == "AB-" || Donor == "A-" || Donor == "B-" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "O+") {
-        if (Donor == "O+" || Donor == "O-") {
-            return true;
-        }
-    } else if (Recipient == "O-") {
-        if (Donor == "O-") {
-            return true;
-        }
-    }
-    return false;
-}
-
+const bloodCompatibilityChecker = require('./bloodCompat.js');
 mongoose.connect('mongodb://localhost:27017/blood-donation-db')
     .then(() => {
         console.log("Mongoose Connection Open");
     })
     .catch(err => {
-        console.log("Error");
-        console.log(err);
+        console.log("Error : ", err);
     })
-
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(express.json());
 app.use(express.static("public"));
 app.use(session({
     secret: 'notasecret',
+    cookie: { maxAge: 60000 },
     saveUninitialized: true,
     resave: true
 }));
-
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.user_id;
@@ -174,20 +136,23 @@ app.get('/donor', requireLogin, (req, res) => {
 })
 
 app.get('/admin', requireLogin, (req, res) => {
+    res.locals.userDocs = "";
     const uid = req.session.user_id;
-
-
     User.findById(uid, function (err, foundID) {
         const isAdmin = foundID.isAdmin;
         if (isAdmin) {
-            Request.find({}, (err, docs) => {
-                return res.render('admin', {
-                    docs
-                });
+            User.find({}, (err, userDocs) => {
+                if (userDocs) {
+                    res.locals.userDocs = userDocs;
+                }
+                Request.find({}, (errReq, requestDocs) => {
+                    res.render('admin', {
+                        requestDocs: requestDocs
+                    });
+                })
             })
-
         } else {
-            return res.send("You have to be a admin to access this page");
+            res.send("You have to be a admin to access this page");
         }
     })
 })
@@ -213,6 +178,28 @@ app.post('/admin/accept', (req, res) => {
         username,
         bloodGroup
     } = req.body;
+    User.findOne({ bloodGroup }, (err, docs) => {
+        if (err) {
+            console.log("Error : ", err);
+        } else {
+            if (docs) {
+                if (docs.donations > 0) {
+                    Request.findOneAndDelete({
+                        username,
+                        bloodGroup
+                    }, (err, docs) => {
+                        if (err) console.log(err);
+                        else
+                            res.redirect('/admin');
+                    });
+                } else {
+                    res.send("blood unavailable");
+                }
+            } else {
+                res.send("blood unavailable");
+            }
+        }
+    })
     //update this and send back data name, phone number of donator also add evenyone's phone number
 })
 
@@ -232,16 +219,17 @@ app.post('/donor', requireLogin, (req, res) => {
             numberofunits = numberofunits + parseInt(previousDonations);
             User.findByIdAndUpdate(
                 uid, {
-                    $set: {
-                        donations: numberofunits
-                    }
-                }, (err, docs) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                })
+                $set: {
+                    donations: numberofunits
+                }
+            }, (err, docs) => {
+                if (err) {
+                    console.log(err);
+                }
+            })
         })
-        res.send("You can go to nearest camp to donate the blood");
+        // res.send("You can go to nearest camp to donate the blood");
+        alert("You can go to nearest camp to donate the blood");
     }
 })
 
@@ -267,6 +255,21 @@ app.post('/blood', (req, res) => {
     }
 })
 
+app.post('/make-admin', (req, res) => {
+    const { username } = req.body;
+    User.findOneAndUpdate({ username }, {
+        $set: {
+            isAdmin: true
+        }
+    }, (err, docs) => {
+        if (docs) {
+            res.send("User Made Admin");
+        } else {
+            res.send("User Not Present");
+        }
+    })
+})
+
 app.post('/register', async (req, res) => {
     let {
         password,
@@ -277,7 +280,12 @@ app.post('/register', async (req, res) => {
         bloodGroup,
         isDonor
     } = req.body;
-    const isAdmin = false;
+    let isAdmin = false;
+    if (username === 'anubhav') {
+        isAdmin = true;
+    } else {
+        isAdmin = false;
+    }
     const donations = 0;
     if (isDonor == undefined) {
         isDonor = false;
