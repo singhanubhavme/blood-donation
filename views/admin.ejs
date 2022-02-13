@@ -7,27 +7,23 @@
         margin: auto;
     }
 
-    .form-signin .form-floating:focus-within {
-        z-index: 2;
-    }
-
     .form-btn-sub {
         margin-top: 0.7em;
     }
 
-    /* .form-floating > .form-floating{
-        margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-    } */
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 2px solid rgba(0, 0, 0, 0.1);
+    }
 </style>
 <title>Admin</title>
 </head>
 
 <body class="text-center">
     <%- include("partials/navbar.ejs") -%>
-    <!-- <h1 class="pt-3">Admin Page</h1> -->
-
+    
     <div class="container">
         <div class="requests">
             <h2 class="pt-3">Patient Requests</h2>
@@ -64,7 +60,7 @@
             <% } %>
         </div>
     </div>
-
+    <hr>
     <div class="container">
         <div class="donations">
             <h2 class="pt-3">Currently Available Blood</h2>
@@ -85,14 +81,14 @@
             <% } %>
         </div>
     </div>
-
+    <hr>
 
     <div class="add-admin">
         <h2>Add Admins From Here</h2>
 
         <div class="form-signin">
             <form action="/make-admin" method="post">
-                <h1 class="h5 mb-3 fw-normal">Please Enter Username</h1>
+                <h1 class="h5 mb-3 fw-normal">Please Enter Username to Make him/her Admin</h1>
                 <div class="form-floating">
                     <input type="text" class="form-control" name="username" id="floatingInput" placeholder="Username">
                     <label for="floatingInput">Username</label>
