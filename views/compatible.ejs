@@ -1,9 +1,26 @@
 <%- include("partials/header.ejs") -%>
+<style>
+    .alert {
+        margin: auto !important;
+        margin-top: 2em !important;
+    }
+</style>
 </head>
 
-<body>
+<body class="text-center">
     <%- include("partials/navbar.ejs") -%>
-    <!-- add animation after checking -->
-    <h1 class="text-center pt-5"><%= bloodGroup1 %> can donate to <%= bloodGroup2 %></h1>
 
-    <%- include("partials/footer.ejs") -%>
+    <% if(isCompatible === true) { %>
+    <div class="alert alert-success w-75 d-flex flex-column animate__animated animate__pulse" role="alert">
+        <h4 class="alert-heading">Congrats!</h4>
+        <p class="display-5"><%= bloodGroup1 %> can donate to <%= bloodGroup2 %></p>
+    <% } else { %>
+    <div class="alert alert-danger w-75 d-flex flex-column animate__animated animate__pulse" role="alert">
+        <h4 class="alert-heading">Sorry!</h4>
+        <p class="display-5"><%= bloodGroup1 %> can not donate to <%= bloodGroup2 %></p>
+    <% } %>
+        <hr>
+        <p class="mb-0">You can request for blood for a patient, or create a emergency blood request after registering on this website.</p>
+    </div>
+
+<%- include("partials/footer.ejs") -%>

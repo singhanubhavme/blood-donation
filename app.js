@@ -49,12 +49,10 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    // const {
-    //     username,
-    //     password
-    // } = req.body;
-    const username = "anubhav";
-    const password = "anubhav";
+    const {
+        username,
+        password
+    } = req.body;
     const foundUser = await User.findAndValidate(username, password)
     if (foundUser) {
         req.session.user_id = foundUser._id;
@@ -240,17 +238,21 @@ app.get('/blood', (req, res) => {
 })
 
 app.post('/blood', (req, res) => {
-    let {
+    const {
         bloodGroup1,
         bloodGroup2
     } = req.body;
-    if (bloodCompatibilityChecker(bloodGroup1, bloodGroup2)) {
+    const compatible = bloodCompatibilityChecker(bloodGroup1, bloodGroup2);
+    let isCompatible = false;
+    if (compatible) {
+        isCompatible = true;
         res.render('compatible', {
-            bloodGroup1: bloodGroup1,
-            bloodGroup2: bloodGroup2
+            bloodGroup1, bloodGroup2, isCompatible
         });
     } else {
-        res.send("Not Compatible");
+        res.render('compatible', {
+            bloodGroup1, bloodGroup2, isCompatible
+        });
     }
 })
 
