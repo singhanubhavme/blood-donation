@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv')
+dotenv.config()
 const User = require('./models/user');
 const Request = require('./models/requested');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const bloodCompatibilityChecker = require('./bloodCompat.js');
-mongoose.connect('mongodb://localhost:27017/blood-donation-db')
+mongoose.connect(process.env.DB_URL)
     .then(() => {
         console.log("Mongoose Connection Open");
     })
@@ -21,7 +24,7 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(express.static("public"));
 app.use(session({
-    secret: 'notasecret',
+    secret: process.env.SECRET,
     cookie: { maxAge: 60000 },
     saveUninitialized: true,
     resave: true
@@ -40,6 +43,26 @@ const requireLogin = (req, res, next) => {
     }
     next();
 }
+
+function sendMail(data, emailAdd, subject) {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        },
+    });
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: emailAdd,
+        subject: subject,
+        html: data
+    };
+    transporter.sendMail(mailOptions);
+    transporter.close();
+}
+
 app.get('/', (req, res) => {
     res.render('home');
 })
@@ -88,7 +111,22 @@ app.post('/emergency', requireLogin, (req, res) => {
         }
         saveReq();
     })
-    //send email
+    User.findById(uid, (err, docs) => {
+        if (docs) {
+            let data = `${docs.name} has requested an emergency blood of ${bloodGroup} Group.<br>`
+            data += `Reason : ${reason}`;
+            User.find({}, (err, docs) => {
+                if (docs) {
+                    for (let i = 0; i < docs.length; i++) {
+                        if (docs[i].isAdmin === true) {
+                            let subject = `Blood Donation Data for ${docs[i].name}`;
+                            sendMail(data, docs[i].email, subject);
+                        }
+                    }
+                }
+            })
+        }
+    })
     res.send('Email is Sent to Admin and Other Donors with required Blood Group');
 })
 
@@ -167,7 +205,19 @@ app.post('/admin/delete', requireLogin, (req, res) => {
     }, (err, docs) => {
         if (err) console.log(err);
         else
+        {
+            if(docs)
+            {
+                User.findOne({ username }, (err, docs) => {
+                    if (docs) {
+                        let subject = `Sorry!`;
+                        let data = `Your Blood Request has been rejected, either we don't have required blood for now or we feel you are making a fake request.`;
+                        sendMail(data, docs.email, subject);
+                    }
+                })
             res.redirect('/admin');
+            }
+        }
     });
 })
 
@@ -187,8 +237,16 @@ app.post('/admin/accept', requireLogin, (req, res) => {
                         bloodGroup
                     }, (err, docs) => {
                         if (err) console.log(err);
-                        else
+                        else {
+                            User.findOne({ username }, (err, docs) => {
+                                if (docs) {
+                                    let subject = `Congrats!`;
+                                    let data = `Your Blood Request has been accepted, you can go to your nearest camp for the requested blood group`;
+                                    sendMail(data, docs.email, subject);
+                                }
+                            })
                             res.redirect('/admin');
+                        }
                     });
                 } else {
                     res.send("blood unavailable");
