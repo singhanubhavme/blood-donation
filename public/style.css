@@ -1,3 +1,6 @@
+body{
+  overflow:auto;
+}
 .dotted-hr {
     border-style: none;
     width: 7%;

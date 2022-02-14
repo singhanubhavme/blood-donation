@@ -7,7 +7,6 @@ dotenv.config()
 const User = require('./models/user');
 const Request = require('./models/requested');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
 const bloodCompatibilityChecker = require('./bloodCompat.js');
 mongoose.connect(process.env.DB_URL)
     .then(() => {
@@ -171,7 +170,7 @@ app.get('/donor', requireLogin, (req, res) => {
     User.findById(uid, function (err, foundID) {
         const isDonor = foundID.isDonor;
         if (isDonor) {
-            return res.render('donor');
+            res.render('donor');
         } else {
             const path_url = req.url;
             res.render("message", { path_url });
@@ -276,7 +275,9 @@ app.post('/admin/accept', requireLogin, (req, res) => {
 app.post('/donor', requireLogin, (req, res) => {
     let numberofunits = parseInt(req.body.numberofunits);
     if (numberofunits <= 0) {
-        return res.send("Invalid Input");
+        const path_url = req.url;
+        res.render("message", { path_url, invalidInput: true });
+        // return res.send("Invalid Input");
     } else {
         const uid = req.session.user_id;
         let previousDonations = 0;
@@ -298,7 +299,7 @@ app.post('/donor', requireLogin, (req, res) => {
             })
         })
         const path_url = req.url;
-        res.render("message", { path_url });
+        res.render("message", { path_url, invalidInput: false });
         // res.send("You can go to nearest camp to donate the blood");
     }
 })
