@@ -1,16 +1,18 @@
 <%- include("partials/header.ejs") -%>
 </head>
+
 <body>
-<%- include("partials/navbar.ejs") -%>
-<div class="container col-xl-10 col-xxl-8 px-4 py-5">
-    <div class="row align-items-center g-lg-5 py-5">
+  <%- include("partials/navbar.ejs") -%>
+  <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-1 border mt-0 rounded-3 pb-5 animate__animated animate__swing">
       <div class="col-lg-7 text-center text-lg-start">
         <h1 class="display-4 fw-bold lh-1 mb-3">Blood Type Compatibility</h1>
-        <p class="col-lg-10 fs-4">Not Every Blood is Compatible to one Another, only specific blood types should be given to the patient, check the Compatibility here.</p>
+        <p class="col-lg-10 fs-4">Not Every Blood is Compatible to one Another, only specific blood types should be
+          given to the patient, check the Compatibility here.</p>
       </div>
       <div class="col-md-10 mx-auto col-lg-5">
         <form class="p-4 p-md-5 border rounded-3 bg-light" action="/blood" method="post">
-            <div class="fw-light mb-3 md lead">Compatibility Checker</div>
+          <div class="fw-light mb-3 md lead">Compatibility Checker</div>
 
           <div class="form-group mb-3">
             <label for="ControlSelect1">Donor Blood Group</label>
@@ -48,14 +50,50 @@
       </div>
     </div>
   </div>
+  <hr class="dotted-hr">
+  <div class="container-fluid w-75 pb-4">
+    <h2 class="text-center pb-4"><u>More Info About Blood</u></h2>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><b>Group A</b> => has only the A antigen on red cells (and B antibody in the plasma).
+        Group A can donate red
+        blood cells to A's and AB's</li>
+      <li class="list-group-item"><b>Group B</b> => has only the B antigen on red cells (and A antibody in the plasma).
+        Group B can donate red
+        blood cells to B's and AB's.</li>
+      <li class="list-group-item"><b>Group AB</b> => has both A and B antigens on red cells (but neither A nor B
+        antibody in the plasma). Group
+        AB can donate red blood cells to other AB’s, but can receive from all others. Group AB is the universal plasma
+        donor.</li>
+      <li class="list-group-item"><b>Group O</b> => has neither A nor B antigens on red cells (but both A and B antibody
+        are in the plasma).
+        Group O can donate red blood cells to anybody. It is the universal red cell donor.</li>
+    </ul>
+  </div>
 
+  <hr class="dotted-hr">
   <div class="container-fluid w-75">
-      <h2 class="text-center"><u>More Info About Blood</u></h2>
-<ul>
-    <li><b>Group A</b> – has only the A antigen on red cells (and B antibody in the plasma). Group A can donate red blood cells to A’s and AB’s</li>
-    <li><b>Group B</b> – has only the B antigen on red cells (and A antibody in the plasma). Group B can donate red blood cells to B’s and AB’s.</li>
-    <li><b>Group AB</b> – has both A and B antigens on red cells (but neither A nor B antibody in the plasma). Group AB can donate red blood cells to other AB’s, but can receive from all others. Group AB is the universal plasma donor.</li>
-    <li><b>Group O</b> – has neither A nor B antigens on red cells (but both A and B antibody are in the plasma). Group O can donate red blood cells to anybody. It is the universal red cell donor.</li>
-</ul>
-</div>
-<%- include("partials/footer.ejs") -%>
+    <h2 class="text-center pb-4"><u>Who can give blood?</u></h2>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Most people can give blood if they are in good health. There are some basic requirements one need to fulfill in
+        order to become a blood donor. Below are some basic eligibility guidelines:</li>
+      <li class="list-group-item"><b>Age : </b>You are aged between 18 and 65.</li>
+      <li class="list-group-item"><b>Weight : </b>You weigh at least 50 kg. In some countries, donors of whole blood
+        donations should weigh at least 45 kg to donate 350 ml ± 10%.</li>
+      <li class="list-group-item"><b>Health : </b>You must be in good health at the time you donate.
+        You cannot donate if you have a cold, flu, sore throat, cold sore, stomach bug or any other infection.
+        If you have recently had a tattoo or body piercing you cannot donate for 6 months from the date of the
+        procedure.
+        You must not donate blood If you do not meet the minimum haemoglobin level for blood donation.</li>
+      <li class="list-group-item"><b>Travel : </b>Travel to areas where mosquito-borne infections are endemic, e.g.
+        malaria, dengue and Zika virus infections, may result in a temporary deferral.
+        Many countries also implemented the policy to defer blood donors with a history of travel or residence for
+        defined cumulative exposure periods in specified countries or areas, as a measure to reduce the risk of
+        transmitting variant Creutzfeldt-Jakob Disease (vCJD) by blood transfusion.</li>
+      <li class="list-group-item"><b>Pregnancy and breastfeeding : </b>Following pregnancy, the deferral period should
+        last as many months as the duration of the pregnancy.
+        It is not advisable to donate blood while breast-feeding. Following childbirth, the deferral period is at least
+        9 months (as for pregnancy) and until 3 months after your baby is significantly weaned (i.e. getting most of
+        his/her nutrition from solids or bottle feeding).</li>
+    </ul>
+  </div>
+  <%- include("partials/footer.ejs") -%>

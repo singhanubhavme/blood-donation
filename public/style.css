@@ -1,0 +1,8 @@
+.dotted-hr {
+    border-style: none;
+    width: 7%;
+    border-top: 7px dotted #414040;
+    margin: auto;
+    background-color: white;
+    padding: 1em;
+  }

@@ -18,11 +18,11 @@ body-div {
     <%- include("partials/navbar.ejs") -%>
     <div class="cover-container d-flex w-50 h-100 p-3 mx-auto flex-column mt-5 body-div">
 <main class="px-3">
-    <h1>Blood Donation Camp</h1>
+    <h1 class="animate__animated animate__bounce">Blood Donation Camp</h1>
     <p class="lead">In this Website you can donate blood or get blood. You need to have a account to donate or receive blood, also find different compatibility of blood in All About Blood Page</p>
     <p class="lead">
         <% if(!currentUser) {%> 
-      <a href = '/login' class="btn btn-lg fw-bold btn-outline-light">Login</a>
+      <a href = '/login' class="btn btn-lg fw-bold btn-outline-light animate__animated animate__pulse">Login</a>
         <%} else {%>
         <a href="/patient" class="btn btn-lg btn-danger btn-outline-light m-2">Patient</a>
         <a href="/donor" class="btn btn-lg btn-secondary text-dark border-white bg-white m-2">Donor</a>
