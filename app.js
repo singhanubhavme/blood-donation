@@ -88,7 +88,7 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
-app.get('/message', (req, res)=>{
+app.get('/message', (req, res) => {
     res.render('message');
 })
 app.get('/emergency', requireLogin, (req, res) => {
@@ -130,7 +130,9 @@ app.post('/emergency', requireLogin, (req, res) => {
             })
         }
     })
-    res.send('Email is Sent to Admin and Other Donors with required Blood Group');
+    const path_url = req.url;
+    res.render('message', { path_url });
+    // res.send('Email is Sent to Admin and Other Donors with required Blood Group');
 })
 
 app.post('/requestblood', requireLogin, async (req, res) => {
@@ -155,7 +157,9 @@ app.post('/requestblood', requireLogin, async (req, res) => {
         }
         saveReq();
     })
-    res.send("Request Sent Admin will Contact Soon on You Email");
+    const path_url = req.url;
+    res.render("message", { path_url });
+    // res.send("Request Sent Admin will Contact Soon on You Email");
 })
 
 app.get('/register', (req, res) => {
@@ -169,7 +173,9 @@ app.get('/donor', requireLogin, (req, res) => {
         if (isDonor) {
             return res.render('donor');
         } else {
-            return res.send("You have to be a donor to access this page");
+            const path_url = req.url;
+            res.render("message", { path_url });
+            // return res.send("You have to be a donor to access this page");
         }
     })
 })
@@ -191,7 +197,9 @@ app.get('/admin', requireLogin, (req, res) => {
                 })
             })
         } else {
-            res.send("You have to be a admin to access this page");
+            const path_url = req.url;
+            res.render("message", { path_url });
+            // res.send("You have to be a admin to access this page");
         }
     })
 })
@@ -207,10 +215,8 @@ app.post('/admin/delete', requireLogin, (req, res) => {
         bloodGroup
     }, (err, docs) => {
         if (err) console.log(err);
-        else
-        {
-            if(docs)
-            {
+        else {
+            if (docs) {
                 User.findOne({ username }, (err, docs) => {
                     if (docs) {
                         let subject = `Sorry!`;
@@ -218,7 +224,7 @@ app.post('/admin/delete', requireLogin, (req, res) => {
                         sendMail(data, docs.email, subject);
                     }
                 })
-            res.redirect('/admin');
+                res.redirect('/admin');
             }
         }
     });
@@ -252,10 +258,14 @@ app.post('/admin/accept', requireLogin, (req, res) => {
                         }
                     });
                 } else {
-                    res.send("blood unavailable");
+                    const path_url = req.url;
+                    res.render("message", { path_url });
+                    // res.send("blood unavailable");
                 }
             } else {
-                res.send("blood unavailable");
+                const path_url = req.url;
+                res.render("message", { path_url });
+                // res.send("blood unavailable");
             }
         }
     })
@@ -287,7 +297,9 @@ app.post('/donor', requireLogin, (req, res) => {
                 }
             })
         })
-        res.send("You can go to nearest camp to donate the blood");
+        const path_url = req.url;
+        res.render("message", { path_url });
+        // res.send("You can go to nearest camp to donate the blood");
     }
 })
 
@@ -324,10 +336,16 @@ app.post('/make-admin', requireLogin, (req, res) => {
             isAdmin: true
         }
     }, (err, docs) => {
+        let userPresent = false;
         if (docs) {
-            res.send("User Made Admin");
+            userPresent = true;
+            const path_url = req.url;
+            res.render("message", { path_url, userPresent });
+            // res.send("User Made Admin");
         } else {
-            res.send("User Not Present");
+            const path_url = req.url;
+            res.render("message", { path_url, userPresent });
+            // res.send("User Not Present");
         }
     })
 })
@@ -356,7 +374,9 @@ app.post('/register', async (req, res) => {
         username: username
     }, async (err, docs) => {
         if (docs.length) {
-            res.send("User Already Registered");
+            const path_url = req.url;
+            res.render("message", { path_url });
+            // res.send("User Already Registered");
         } else {
             const user = new User({
                 username,
