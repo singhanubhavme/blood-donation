@@ -88,6 +88,9 @@ app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
+app.get('/message', (req, res)=>{
+    res.render('message');
+})
 app.get('/emergency', requireLogin, (req, res) => {
     res.render('emergency');
 })
