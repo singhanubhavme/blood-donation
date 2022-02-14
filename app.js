@@ -204,7 +204,7 @@ app.get('/admin', requireLogin, (req, res) => {
 })
 
 
-app.post('/admin/reject', requireLogin, (req, res) => {
+app.post('/admin/reject', (req, res) => {
     const {
         username,
         bloodGroup
@@ -223,13 +223,14 @@ app.post('/admin/reject', requireLogin, (req, res) => {
                         sendMail(data, docs.email, subject);
                     }
                 })
-                res.render('admin');
+                res.redirect('/admin');
             }
         }
     });
 })
 
-app.post('/admin/accept', requireLogin, (req, res) => {
+//changes needed here
+app.post('/admin/accept', (req, res) => {
     const {
         username,
         bloodGroup
@@ -251,9 +252,9 @@ app.post('/admin/accept', requireLogin, (req, res) => {
                                     let subject = `Congrats!`;
                                     let data = `Your Blood Request has been accepted, you can go to your nearest camp for the requested blood group`;
                                     sendMail(data, docs.email, subject);
+                                    res.redirect('/admin');
                                 }
                             })
-                            res.render('admin');
                         }
                     });
                 } else {
