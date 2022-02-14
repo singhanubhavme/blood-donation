@@ -28,7 +28,12 @@
 <%- include("partials/navbar.ejs") -%>
 
 <body class="text-center">
-
+<% if(invalidAuth === true) { %>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Invalid Password!</strong> Please Try Again!!!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
   <main class="form-signin">
     <form action="/login" method="post">
       <img class="mb-4" src="logo.png" alt="" width="100" height="100">

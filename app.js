@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(session({
     secret: process.env.SECRET,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
     saveUninitialized: true,
     resave: true
 }));
@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', {invalidAuth: false});
 })
 
 app.post('/login', async (req, res) => {
@@ -80,7 +80,7 @@ app.post('/login', async (req, res) => {
         req.session.user_id = foundUser._id;
         res.redirect('/');
     } else {
-        res.redirect('/login');
+        res.render('login', {invalidAuth : true});
     }
 })
 app.post('/logout', (req, res) => {
@@ -115,7 +115,7 @@ app.post('/emergency', requireLogin, (req, res) => {
     })
     User.findById(uid, (err, docs) => {
         if (docs) {
-            let data = `${docs.name} has requested an emergency blood of ${bloodGroup} Group.<br>`
+            let data = `${docs.name} has requested emergency blood of ${bloodGroup} Group.<br>`
             data += `Reason : ${reason}`;
             User.find({}, (err, docs) => {
                 if (docs) {
@@ -140,7 +140,7 @@ app.post('/requestblood', requireLogin, async (req, res) => {
         reason
     } = req.body;
     const emergency = false;
-    const completed = false;
+    // const completed = false;
     const uid = req.session.user_id;
     User.findById(uid, (err, foundID) => {
         let username = foundID.username;
@@ -150,7 +150,7 @@ app.post('/requestblood', requireLogin, async (req, res) => {
                 bloodGroup,
                 reason,
                 emergency,
-                completed
+                // completed
             })
             const result = await request.save();
         }
@@ -204,7 +204,7 @@ app.get('/admin', requireLogin, (req, res) => {
 })
 
 
-app.post('/admin/delete', requireLogin, (req, res) => {
+app.post('/admin/reject', requireLogin, (req, res) => {
     const {
         username,
         bloodGroup
@@ -223,7 +223,7 @@ app.post('/admin/delete', requireLogin, (req, res) => {
                         sendMail(data, docs.email, subject);
                     }
                 })
-                res.redirect('/admin');
+                res.render('admin');
             }
         }
     });
@@ -253,7 +253,7 @@ app.post('/admin/accept', requireLogin, (req, res) => {
                                     sendMail(data, docs.email, subject);
                                 }
                             })
-                            res.redirect('/admin');
+                            res.render('admin');
                         }
                     });
                 } else {

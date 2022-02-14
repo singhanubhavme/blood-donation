@@ -12,9 +12,6 @@ const reqSchema = new mongoose.Schema({
     },
     emergency : {
         type : Boolean
-    },
-    completed:{
-        type: Boolean
     }
 })
 
