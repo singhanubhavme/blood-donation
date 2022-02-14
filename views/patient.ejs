@@ -1,21 +1,21 @@
 <%- include("partials/header.ejs") -%>
 <style>
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-}
+  .form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+  }
 
-.form-signin .checkbox {
-  font-weight: 400;
-}
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
 
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
+  .form-signin .form-floating:focus-within {
+    z-index: 2;
+  }
 
-/* .form-signin input[type="email"] {
+  /* .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -26,45 +26,47 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 } */
-.form-group, .form-floating{
+  .form-group,
+  .form-floating {
     margin-bottom: 2em;
     margin-top: 2em;
 
-}
+  }
 </style>
 </head>
-<body class="text-center">
-    <%- include("partials/navbar.ejs") -%>    
-    <h1>Patient</h1>
-    <main class="form-signin">
-        <form action="/requestblood" method="post">
-        <img class="mb-4" src="logo.jpg" alt="" width="100" height="100">
-        <h1 class="h3 mb-3 fw-normal">Blood Request</h1>
-    
-        <div class="form-group">
-            <label for="ControlSelect1">Which Blood Group is Required?</label>
-            <select class="form-control" id="ControlSelect1" name="bloodGroup">
-              <option>A+</option>
-              <option>B+</option>
-              <option>AB+</option>
-              <option>O+</option>
-              <option>A-</option>
-              <option>B-</option>
-              <option>AB-</option>
-              <option>O-</option>
-              <option>Others</option>
-            </select>
-          </div>
 
-        <div class="form-floating">
-          <input type="text" class="form-control" id="floatingPassword" name="reason" placeholder="Reason">
-          <label for="floatingPassword">Reason for Blood Request? (brief)</label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary m-1" type="submit">Request</button>
-      </form>
-    </main>
-    
-<!-- 
+<body class="text-center">
+  <%- include("partials/navbar.ejs") -%>
+  <h1>Patient</h1>
+  <main class="form-signin">
+    <form action="/requestblood" method="post">
+      <img class="mb-4" src="logo.jpg" alt="" width="100" height="100">
+      <h1 class="h3 mb-3 fw-normal">Blood Request</h1>
+
+      <div class="form-group">
+        <label for="ControlSelect1">Which Blood Group is Required?</label>
+        <select class="form-control" id="ControlSelect1" name="bloodGroup">
+          <option>A+</option>
+          <option>B+</option>
+          <option>AB+</option>
+          <option>O+</option>
+          <option>A-</option>
+          <option>B-</option>
+          <option>AB-</option>
+          <option>O-</option>
+          <option>Others</option>
+        </select>
+      </div>
+
+      <div class="form-floating">
+        <input type="text" class="form-control" id="floatingPassword" name="reason" placeholder="Reason">
+        <label for="floatingPassword">Reason for Blood Request? (brief)</label>
+      </div>
+      <button class="w-100 btn btn-lg btn-primary m-1" type="submit">Request</button>
+    </form>
+  </main>
+
+  <!-- 
 <h1>Patient Page</h1>
 <form action="/emergency" method="post">
     <label for="bloodGroup">What Blood Group is Required ? </label>
@@ -73,4 +75,4 @@
     <input type="text" name="reason" id="reason">
     <button>Emergency</button>
 </form> -->
-<%- include("partials/footer.ejs") -%>
+  <%- include("partials/footer.ejs") -%>

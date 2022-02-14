@@ -158,7 +158,7 @@ app.get('/admin', requireLogin, (req, res) => {
 })
 
 
-app.post('/admin/delete', (req, res) => {
+app.post('/admin/delete', requireLogin, (req, res) => {
     const {
         username,
         bloodGroup
@@ -173,7 +173,7 @@ app.post('/admin/delete', (req, res) => {
     });
 })
 
-app.post('/admin/accept', (req, res) => {
+app.post('/admin/accept', requireLogin, (req, res) => {
     const {
         username,
         bloodGroup
@@ -228,8 +228,7 @@ app.post('/donor', requireLogin, (req, res) => {
                 }
             })
         })
-        // res.send("You can go to nearest camp to donate the blood");
-        alert("You can go to nearest camp to donate the blood");
+        res.send("You can go to nearest camp to donate the blood");
     }
 })
 
@@ -255,7 +254,7 @@ app.post('/blood', (req, res) => {
     }
 })
 
-app.post('/make-admin', (req, res) => {
+app.post('/make-admin', requireLogin, (req, res) => {
     const { username } = req.body;
     User.findOneAndUpdate({ username }, {
         $set: {
