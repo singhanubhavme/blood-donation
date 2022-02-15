@@ -1,11 +1,51 @@
-body{
-  overflow:auto;
+body {
+  overflow: auto;
 }
+
 .dotted-hr {
-    border-style: none;
-    width: 7%;
-    border-top: 7px dotted #414040;
-    margin: auto;
-    background-color: white;
-    padding: 1em;
+  border-style: none;
+  width: 7%;
+  border-top: 7px dotted #414040;
+  margin: auto;
+  background-color: white;
+  padding: 1em;
+}
+
+@media (max-width : 990px) {
+  #navbarSupportedContent>div {
+    display: flex;
+    justify-content: center;
   }
+
+  body>nav>div {
+    text-align: center !important;
+  }
+}
+
+@media (max-width : 312px) {
+  body>nav>div {
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 770px) {
+  footer {
+    flex-direction: column !important;
+  }
+
+  body>div.container>footer>ul {
+    justify-content: center !important;
+    align-items: center;
+  }
+}
+
+@media (max-width : 650px) {
+  body>div.container-fluid.w-75.pb-4 {
+    width: auto !important;
+  }
+
+  body>div:nth-child(8) {
+    width: auto !important;
+  }
+
+}

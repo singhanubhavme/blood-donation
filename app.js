@@ -10,10 +10,10 @@ const session = require('express-session');
 const bloodCompatibilityChecker = require('./bloodCompat.js');
 mongoose.connect(process.env.DB_URL)
     .then(() => {
-        console.log("Mongoose Connection Open");
+        console.log('Mongoose Connection Open');
     })
     .catch(err => {
-        console.log("Error : ", err);
+        console.log('Error : ', err);
     })
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -21,7 +21,7 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static('public'));
 app.use(session({
     secret: process.env.SECRET,
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
@@ -34,7 +34,6 @@ app.use((req, res, next) => {
     res.locals.url = req.url;
     next();
 });
-
 
 const requireLogin = (req, res, next) => {
     if (!req.session.user_id) {
@@ -83,16 +82,20 @@ app.post('/login', async (req, res) => {
         res.render('login', {invalidAuth : true});
     }
 })
+
 app.post('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
+
 app.get('/message', (req, res) => {
     res.render('message');
 })
+
 app.get('/emergency', requireLogin, (req, res) => {
     res.render('emergency');
 })
+
 app.post('/emergency', requireLogin, (req, res) => {
     const {
         bloodGroup,
@@ -131,7 +134,7 @@ app.post('/emergency', requireLogin, (req, res) => {
     })
     const path_url = req.url;
     res.render('message', { path_url });
-    // res.send('Email is Sent to Admin and Other Donors with required Blood Group');
+    // Email is Sent to Admin and Other Donors with required Blood Group
 })
 
 app.post('/requestblood', requireLogin, async (req, res) => {
@@ -140,7 +143,6 @@ app.post('/requestblood', requireLogin, async (req, res) => {
         reason
     } = req.body;
     const emergency = false;
-    // const completed = false;
     const uid = req.session.user_id;
     User.findById(uid, (err, foundID) => {
         let username = foundID.username;
@@ -150,15 +152,14 @@ app.post('/requestblood', requireLogin, async (req, res) => {
                 bloodGroup,
                 reason,
                 emergency,
-                // completed
             })
             const result = await request.save();
         }
         saveReq();
     })
     const path_url = req.url;
-    res.render("message", { path_url });
-    // res.send("Request Sent Admin will Contact Soon on You Email");
+    res.render('message', { path_url });
+    // Request Sent Admin will Contact Soon on You Email
 })
 
 app.get('/register', (req, res) => {
@@ -173,14 +174,15 @@ app.get('/donor', requireLogin, (req, res) => {
             res.render('donor');
         } else {
             const path_url = req.url;
-            res.render("message", { path_url });
-            // return res.send("You have to be a donor to access this page");
+            res.render('message', { path_url, invalidInput: 777 });
+            // 777 is a number so that invalidInput is not undefined for post donor requests
+            // You have to be a donor to access this page
         }
     })
 })
 
 app.get('/admin', requireLogin, (req, res) => {
-    res.locals.userDocs = "";
+    res.locals.userDocs = '';
     const uid = req.session.user_id;
     User.findById(uid, function (err, foundID) {
         const isAdmin = foundID.isAdmin;
@@ -197,8 +199,8 @@ app.get('/admin', requireLogin, (req, res) => {
             })
         } else {
             const path_url = req.url;
-            res.render("message", { path_url });
-            // res.send("You have to be a admin to access this page");
+            res.render('message', { path_url });
+            // You have to be a admin to access this page
         }
     })
 })
@@ -237,7 +239,7 @@ app.post('/admin/accept', (req, res) => {
     } = req.body;
     User.findOne({ bloodGroup }, (err, docs) => {
         if (err) {
-            console.log("Error : ", err);
+            console.log('Error : ', err);
         } else {
             if (docs) {
                 if (docs.donations > 0) {
@@ -259,13 +261,13 @@ app.post('/admin/accept', (req, res) => {
                     });
                 } else {
                     const path_url = req.url;
-                    res.render("message", { path_url });
-                    // res.send("blood unavailable");
+                    res.render('message', { path_url });
+                    // blood unavailable
                 }
             } else {
                 const path_url = req.url;
-                res.render("message", { path_url });
-                // res.send("blood unavailable");
+                res.render('message', { path_url });
+                // blood unavailable
             }
         }
     })
@@ -277,8 +279,8 @@ app.post('/donor', requireLogin, (req, res) => {
     let numberofunits = parseInt(req.body.numberofunits);
     if (numberofunits <= 0) {
         const path_url = req.url;
-        res.render("message", { path_url, invalidInput: true });
-        // return res.send("Invalid Input");
+        res.render('message', { path_url, invalidInput: true });
+        // Invalid Input
     } else {
         const uid = req.session.user_id;
         let previousDonations = 0;
@@ -300,14 +302,15 @@ app.post('/donor', requireLogin, (req, res) => {
             })
         })
         const path_url = req.url;
-        res.render("message", { path_url, invalidInput: false });
-        // res.send("You can go to nearest camp to donate the blood");
+        res.render('message', { path_url, invalidInput: false });
+        // You can go to nearest camp to donate the blood
     }
 })
 
 app.get('/patient', requireLogin, (req, res) => {
     res.render('patient');
 })
+
 app.get('/blood', (req, res) => {
     res.render('blood');
 })
@@ -342,12 +345,12 @@ app.post('/make-admin', requireLogin, (req, res) => {
         if (docs) {
             userPresent = true;
             const path_url = req.url;
-            res.render("message", { path_url, userPresent });
-            // res.send("User Made Admin");
+            res.render('message', { path_url, userPresent });
+            // User Made Admin
         } else {
             const path_url = req.url;
-            res.render("message", { path_url, userPresent });
-            // res.send("User Not Present");
+            res.render('message', { path_url, userPresent });
+            // User Not Present
         }
     })
 })
@@ -377,8 +380,8 @@ app.post('/register', async (req, res) => {
     }, async (err, docs) => {
         if (docs.length) {
             const path_url = req.url;
-            res.render("message", { path_url });
-            // res.send("User Already Registered");
+            res.render('message', { path_url });
+            // User Already Registered
         } else {
             const user = new User({
                 username,
@@ -398,9 +401,11 @@ app.post('/register', async (req, res) => {
     })
 
 })
+
 app.get('*', function (req, res) {
-    res.render("error404");
+    res.render('error404');
 });
+
 app.listen(3000, () => {
-    console.log("Serving at 3000");
+    console.log('Serving at 3000');
 })
