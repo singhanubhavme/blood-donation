@@ -20,7 +20,10 @@
   <%- include("partials/navbar.ejs") -%>
   <div class="cover-container container-fluid d-flex w-auto h-100 p-3 mx-auto flex-column mt-5 body-div">
     <main class="px-3">
-      <h1 class="animate__animated animate__bounce">Blood Donation Camp</h1>
+      <% if(fullname !== '') { %>
+      <h3 class="animate__animated animate__bounceInDown" style="color : #46BCDE">Welcome <b><%= fullname %></b></h3>
+      <% } %>
+      <h1 class="animate__animated animate__headShake">Blood Donation Camp</h1>
       <p class="lead">In this Website you can donate blood or get blood. You need to have a account to donate or receive
         blood, also find different compatibility of blood in All About Blood Page</p>
       <p class="lead">

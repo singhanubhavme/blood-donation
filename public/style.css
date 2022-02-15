@@ -32,7 +32,10 @@ body {
   footer {
     flex-direction: column !important;
   }
-
+  body > div.container > footer > a > img{
+    margin-top: 4px;
+    margin-bottom: 2px;
+  }
   body>div.container>footer>ul {
     justify-content: center !important;
     align-items: center;

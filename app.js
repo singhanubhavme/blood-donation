@@ -8,6 +8,7 @@ const User = require('./models/user');
 const Request = require('./models/requested');
 const session = require('express-session');
 const bloodCompatibilityChecker = require('./bloodCompat.js');
+
 mongoose.connect(process.env.DB_URL)
     .then(() => {
         console.log('Mongoose Connection Open');
@@ -15,8 +16,10 @@ mongoose.connect(process.env.DB_URL)
     .catch(err => {
         console.log('Error : ', err);
     })
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
 app.use(express.urlencoded({
     extended: true
 }));
@@ -28,7 +31,6 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-
 app.use((req, res, next) => {
     res.locals.currentUser = req.session.user_id;
     res.locals.url = req.url;
@@ -37,6 +39,7 @@ app.use((req, res, next) => {
 
 const requireLogin = (req, res, next) => {
     if (!req.session.user_id) {
+        req.session.returnTo = req.originalUrl;
         return res.redirect('/login');
     }
     next();
@@ -62,11 +65,18 @@ function sendMail(data, emailAdd, subject) {
 }
 
 app.get('/', (req, res) => {
-    res.render('home');
+    if (req.session.user_id) {
+        User.findById(req.session.user_id, (err, docs) => {
+            fullname = docs.name;
+            res.render('home', { fullname });
+        })
+    } else {
+        res.render('home', { fullname: '' });
+    }
 })
 
 app.get('/login', (req, res) => {
-    res.render('login', {invalidAuth: false});
+    res.render('login', { invalidAuth: false });
 })
 
 app.post('/login', async (req, res) => {
@@ -77,9 +87,11 @@ app.post('/login', async (req, res) => {
     const foundUser = await User.findAndValidate(username, password)
     if (foundUser) {
         req.session.user_id = foundUser._id;
-        res.redirect('/');
+        const redirectUrl = req.session.returnTo || '/';
+        delete req.session.returnTo;
+        res.redirect(redirectUrl);
     } else {
-        res.render('login', {invalidAuth : true});
+        res.render('login', { invalidAuth: true });
     }
 })
 
@@ -118,13 +130,13 @@ app.post('/emergency', requireLogin, (req, res) => {
     })
     User.findById(uid, (err, docs) => {
         if (docs) {
-            let data = `${docs.name} has requested emergency blood of ${bloodGroup} Group.<br>`
+            let data = `${docs.name} has requested a unit of ${bloodGroup} Blood Group. It's an emergency.<br>`
             data += `Reason : ${reason}`;
             User.find({}, (err, docs) => {
                 if (docs) {
                     for (let i = 0; i < docs.length; i++) {
                         if (docs[i].isAdmin === true) {
-                            let subject = `Blood Donation Data for ${docs[i].name}`;
+                            let subject = `<b>Emergency</b> Blood Donation Request to ${docs[i].name}`;
                             sendMail(data, docs[i].email, subject);
                         }
                     }
@@ -231,7 +243,6 @@ app.post('/admin/reject', (req, res) => {
     });
 })
 
-//changes needed here
 app.post('/admin/accept', (req, res) => {
     const {
         username,
@@ -243,22 +254,36 @@ app.post('/admin/accept', (req, res) => {
         } else {
             if (docs) {
                 if (docs.donations > 0) {
-                    Request.findOneAndDelete({
-                        username,
-                        bloodGroup
-                    }, (err, docs) => {
-                        if (err) console.log(err);
-                        else {
-                            User.findOne({ username }, (err, docs) => {
-                                if (docs) {
-                                    let subject = `Congrats!`;
-                                    let data = `Your Blood Request has been accepted, you can go to your nearest camp for the requested blood group`;
-                                    sendMail(data, docs.email, subject);
-                                    res.redirect('/admin');
-                                }
-                            })
-                        }
-                    });
+                    User.findOne({ bloodGroup }, (err, docs) => {
+                        let previousDonations = parseInt(docs.donations);
+                        previousDonations--;
+                        User.findOneAndUpdate(
+                            { bloodGroup }, {
+                            $set: {
+                                donations: previousDonations
+                            }
+                        }, (err, docs) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                        })
+                        Request.findOneAndDelete({
+                            username,
+                            bloodGroup
+                        }, (err, docs) => {
+                            if (err) console.log(err);
+                            else {
+                                User.findOne({ username }, (err, docs) => {
+                                    if (docs) {
+                                        let subject = `Congrats!`;
+                                        let data = `Your Blood Request has been accepted, you can go to your nearest camp for the requested blood group`;
+                                        sendMail(data, docs.email, subject);
+                                        res.redirect('/admin');
+                                    }
+                                })
+                            }
+                        });
+                    })
                 } else {
                     const path_url = req.url;
                     res.render('message', { path_url });
