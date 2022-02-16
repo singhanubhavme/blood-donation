@@ -136,7 +136,7 @@ app.post('/emergency', requireLogin, (req, res) => {
                 if (docs) {
                     for (let i = 0; i < docs.length; i++) {
                         if (docs[i].isAdmin === true) {
-                            let subject = `<b>Emergency</b> Blood Donation Request to ${docs[i].name}`;
+                            let subject = `Emergency Blood Donation Request to ${docs[i].name}`;
                             sendMail(data, docs[i].email, subject);
                         }
                     }
