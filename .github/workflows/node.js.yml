@@ -25,4 +25,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
-    - run: sudo pm2 restart /root/actions-runner/blood-donation/blood-donation/blood-donation/app.js
+    - run: sudo pm2 restart /root/actions-runner/blood-donation/blood-donation/blood-donation/ecosystem.config.js
