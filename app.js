@@ -296,7 +296,6 @@ app.post('/admin/accept', (req, res) => {
             }
         }
     })
-    //update this and send back data name, phone number of donator also add evenyone's phone number
 })
 
 
@@ -427,7 +426,7 @@ app.post('/register', async (req, res) => {
 
 })
 
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
     res.render('error404');
 });
 

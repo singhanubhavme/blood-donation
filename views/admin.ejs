@@ -75,6 +75,11 @@
                     <p class="card-text"><b>Name : </b> <%= userDocs[j].name %> </p>
                     <p class="card-text"><b>Email : </b> <%= userDocs[j].email %> </p>
                     <p class="card-text"><b>Phone Number : </b> <%= userDocs[j].phoneNum %> </p>
+                    <% if(userDocs[j].isDonor === true) { %>
+                        <p class="card-text"><b><%= userDocs[j].name %> </b> is Donor</p>
+                    <% } else { %>
+                        <p class="card-text"><b><%= userDocs[j].name %> </b> is not a Donor</p>
+                    <% } %>
                     <% if(userDocs[j].isAdmin === true) { %>
                         <p class="card-text"><b><%= userDocs[j].name %> </b> is Admin</p>
                     <% } %>
